@@ -5,7 +5,7 @@ import gro from "../../public/gro.png";
 export default function Home() {
   return (
     <div className=" min-h-screen flex flex-col md:flex-row gap-14 items-center grid-container">
-      <div className="h-full md:h-[85vh] w-full flex flex-col justify-between pt-36 md:py-0">
+      <div className="h-full md:h-[85vh] w-full flex flex-col justify-between pt-5 md:py-0">
         <div>
           <Image
             src={gro}
