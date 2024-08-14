@@ -4,9 +4,9 @@ import gro from "../../public/gro.png";
 
 export default function Home() {
   return (
-    <div className=" min-h-screen flex flex-col md:flex-row gap-14 items-center grid-container">
-      <div className="h-full md:h-[85vh] w-full flex flex-col justify-between pt-5 md:py-0">
-        <div className="w-[70%]">
+    <div className=" h-[90vh] overflow-hidden sc flex flex-col md:flex-row gap-14 items-center grid-container ">
+      <div className="h-full md:h-[85vh] w-full flex flex-col justify-between  md:py-0">
+        <div className=" md:w-[80%]">
           <Image
             src={gro}
             alt="Loop 1"
@@ -24,10 +24,10 @@ export default function Home() {
             Cultivating growth through community,
             <br /> mindset, and processes to enable driven <br /> individuals to
             reach their potential. <br /> <br />
-            <span className="font-normal">
+            {/* <span className="font-normal">
               Designed by
               <a href="https://www.forssdigital.com/"> Forss Digital</a>
-            </span>
+            </span> */}
           </p>
         </div>
       </div>
