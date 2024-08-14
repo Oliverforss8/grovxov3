@@ -4,8 +4,8 @@ import gro from "../../public/gro.png";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col md:flex-row gap-14 items-center grid-container">
-      <div className="h-[85vh] w-full flex flex-col justify-between">
+    <div className=" min-h-screen flex flex-col md:flex-row gap-14 items-center grid-container">
+      <div className="h-full md:h-[85vh] w-full flex flex-col justify-between pt-36 md:py-0">
         <div>
           <Image
             src={gro}
@@ -15,10 +15,10 @@ export default function Home() {
             height={1000}
           />
         </div>
-        <div className="md:hidden w-full h-full">
+        <div className="md:hidden w-full h-full py-">
           <VideoLoop />
         </div>
-        <div className="text-center mt-4">
+        <div className="text-center mb-4">
           <p className="text-white font-bold text-[16px] md:text-[20px] text-left">
             Cultivating growth through community,
             <br /> mindset, and processes to enable driven <br /> individuals to

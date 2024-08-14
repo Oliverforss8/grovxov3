@@ -21,6 +21,10 @@ const images = [
   },
 ];
 
+const imageHeight = 60; // Adjust based on your image height as a percentage of viewport height
+const marginBetweenImages = 2; // Adjust based on desired margin as a percentage
+const totalHeight = (imageHeight + marginBetweenImages) * images.length;
+
 const VideoLoop: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -29,29 +33,19 @@ const VideoLoop: React.FC = () => {
   const [popupVisible, setPopupVisible] = useState<number | null>(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      const totalHeight = container.scrollHeight / 2;
-
-      tweenRef.current = gsap.to(container, {
-        y: `-${totalHeight}px`,
+    const context = gsap.context(() => {
+      tweenRef.current = gsap.to(containerRef.current, {
+        y: `-${totalHeight}vh`,
         duration: 20,
         ease: Power0.easeNone,
         repeat: -1,
         modifiers: {
-          y: (y) => {
-            const mod = parseFloat(y) % totalHeight;
-            return `${mod}px`;
-          },
+          y: gsap.utils.unitize((y) => parseFloat(y) % totalHeight), // Modifies y to create an infinite loop
         },
       });
-    }
+    }, containerRef);
 
-    return () => {
-      if (tweenRef.current) {
-        tweenRef.current.kill();
-      }
-    };
+    return () => context.revert();
   }, []);
 
   const handleMouseEnterImage = (index: number) => {
@@ -95,7 +89,7 @@ const VideoLoop: React.FC = () => {
 
   return (
     <div
-      className="flex justify-center items-center h-screen overflow-hidden"
+      className="flex justify-center items-center h-screen"
       onMouseMove={handleMouseMove}
     >
       <div
@@ -108,8 +102,8 @@ const VideoLoop: React.FC = () => {
               key={index}
               className="relative w-full group"
               style={{
-                height: "85vh", // Adjusted for better responsiveness
-                marginBottom: "5vh",
+                height: `${imageHeight}vh`,
+                marginBottom: `${marginBetweenImages}vh`,
                 cursor: popupVisible === index ? "default" : "pointer",
               }}
               onMouseEnter={() => handleMouseEnterImage(index)}
@@ -129,8 +123,8 @@ const VideoLoop: React.FC = () => {
               key={`clone-${index}`}
               className="relative w-full group"
               style={{
-                height: "85vh",
-                marginBottom: "5vh",
+                height: `${imageHeight}vh`,
+                marginBottom: `${marginBetweenImages}vh`,
                 cursor: popupVisible === index ? "default" : "pointer",
               }}
               onMouseEnter={() => handleMouseEnterImage(index)}
