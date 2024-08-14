@@ -1,12 +1,12 @@
 import VideoLoop from "@/components/videoloop";
 import Image from "next/image";
-import gro from "../../public/gro.png";
+import gro from "../../public/grocommunity.png";
 
 export default function Home() {
   return (
     <div className=" h-[90vh] overflow-hidden sc flex flex-col md:flex-row gap-14 items-center grid-container ">
-      <div className="h-full md:h-[85vh] w-full flex flex-col justify-between  md:py-0">
-        <div className=" md:w-[80%]">
+      <div className="h-full md:h-[90vh] w-full flex flex-col justify-between  md:py-0">
+        <div className=" md:w-[80%] mt-20">
           <Image
             src={gro}
             alt="Loop 1"
