@@ -21,45 +21,100 @@ const images = [
   },
 ];
 
-const imageHeight = 60; // Now based on viewport width for better responsiveness
-const marginBetweenImages = 2; // Adjust based on desired margin as a percentage
-const totalHeight = (imageHeight + marginBetweenImages) * images.length;
-
 const VideoLoop: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const [hoveredImage, setHoveredImage] = useState<number | null>(null);
+  const [popupVisible, setPopupVisible] = useState<number | null>(null);
 
   useEffect(() => {
-    const context = gsap.context(() => {
-      const container = containerRef.current;
-      if (container) {
-        tweenRef.current = gsap.to(container, {
-          y: `-${totalHeight}vw`, // Adjusted for responsiveness
-          duration: 20,
-          ease: Power0.easeNone,
-          repeat: -1,
-          modifiers: {
-            y: gsap.utils.unitize((y) => parseFloat(y) % totalHeight),
-          },
-        });
-      }
-    }, containerRef);
+    const container = containerRef.current;
+    if (container) {
+      const totalHeight = container.scrollHeight / 2;
 
-    return () => context.revert();
+      tweenRef.current = gsap.to(container, {
+        y: `-${totalHeight}px`,
+        duration: 20,
+        ease: Power0.easeNone,
+        repeat: -1,
+        modifiers: {
+          y: (y) => {
+            const mod = parseFloat(y) % totalHeight;
+            return `${mod}px`;
+          },
+        },
+      });
+    }
+
+    return () => {
+      if (tweenRef.current) {
+        tweenRef.current.kill();
+      }
+    };
   }, []);
 
+  const handleMouseEnterImage = (index: number) => {
+    if (tweenRef.current) {
+      tweenRef.current.pause();
+    }
+    setHoveredImage(index);
+    gsap.to(cursorRef.current, { opacity: 1, duration: 0.1 });
+  };
+
+  const handleMouseLeaveImage = () => {
+    if (tweenRef.current) {
+      tweenRef.current.play();
+    }
+    setHoveredImage(null);
+    gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (cursorRef.current && hoveredImage !== null && popupVisible === null) {
+      gsap.set(cursorRef.current, { x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleMouseLeaveContainer = () => {
+    gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+  };
+
+  const handleImageClick = (index: number | null) => {
+    setPopupVisible(index);
+    gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+  };
+
+  const handleClosePopup = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setPopupVisible(null);
+    setHoveredImage(null);
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="relative overflow-hidden h-[85vh] w-full text-white">
+    <div
+      className="flex justify-center items-center h-screen overflow-hidden"
+      onMouseMove={handleMouseMove}
+    >
+      <div
+        className="relative overflow-hidden h-[85vh] w-full text-white"
+        onMouseLeave={handleMouseLeaveContainer}
+      >
         <div ref={containerRef} className="absolute top-0 w-full">
           {images.map((image, index) => (
             <div
               key={index}
               className="relative w-full group"
               style={{
-                height: `${imageHeight}vw`,
-                marginBottom: `${marginBetweenImages}vw`,
+                height: "85vh", // Adjusted for better responsiveness
+                marginBottom: "5vh",
+                cursor: popupVisible === index ? "default" : "pointer",
               }}
+              onMouseEnter={() => handleMouseEnterImage(index)}
+              onMouseLeave={handleMouseLeaveImage}
+              onClick={() => handleImageClick(index)}
             >
               <Image
                 src={image.src}
@@ -74,9 +129,13 @@ const VideoLoop: React.FC = () => {
               key={`clone-${index}`}
               className="relative w-full group"
               style={{
-                height: `${imageHeight}vw`,
-                marginBottom: `${marginBetweenImages}vw`,
+                height: "85vh",
+                marginBottom: "5vh",
+                cursor: popupVisible === index ? "default" : "pointer",
               }}
+              onMouseEnter={() => handleMouseEnterImage(index)}
+              onMouseLeave={handleMouseLeaveImage}
+              onClick={() => handleImageClick(index)}
             >
               <Image
                 src={image.src}
@@ -88,9 +147,28 @@ const VideoLoop: React.FC = () => {
           ))}
         </div>
       </div>
+      {popupVisible !== null && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+          <div className="relative bg-white rounded-lg p-4 w-[80vw] h-[40vh] md:w-[50vw] md:h-[50vh] shadow-lg">
+            <p className="mb-4">{images[popupVisible].text}</p>
+            <button
+              className="absolute top-2 right-2 rounded-full bg-black text-white py-2 px-4"
+              onClick={handleClosePopup}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      <div
+        ref={cursorRef}
+        className="fixed top-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-black text-white flex items-center justify-center rounded-full pointer-events-none transition-opacity duration-100"
+        style={{ transform: "translate(-50%, -50%)", zIndex: 1000, opacity: 0 }}
+      >
+        View Now
+      </div>
     </div>
   );
 };
 
 export default VideoLoop;
-
