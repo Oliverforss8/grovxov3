@@ -2,51 +2,58 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { gsap, Power0 } from "gsap";
+import { client } from "@/sanity/lib/client";
 
-const images = [
-  {
-    src: "/image.png",
-    alt: "Loop 1",
-    text: "This is Loop 1",
-  },
-  {
-    src: "/image2.png",
-    alt: "Loop 2",
-    text: "This is Loop 2",
-  },
-  {
-    src: "/image3.png",
-    alt: "Loop 3",
-    text: "This is Loop 3",
-  },
-];
+interface ImageData {
+  src: string;
+  alt: string;
+  text: string;
+}
 
 const imageHeight = 60; // Adjust based on your image height as a percentage of viewport height
 const marginBetweenImages = 2; // Adjust based on desired margin as a percentage
-const totalHeight = (imageHeight + marginBetweenImages) * images.length;
+const totalHeight = (imageHeight + marginBetweenImages) * 3; // Update this based on the fetched data length
 
 const VideoLoop: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const [images, setImages] = useState<ImageData[]>([]);
   const [hoveredImage, setHoveredImage] = useState<number | null>(null);
   const [popupVisible, setPopupVisible] = useState<number | null>(null);
 
   useEffect(() => {
-    const context = gsap.context(() => {
-      tweenRef.current = gsap.to(containerRef.current, {
-        y: `-${totalHeight}vh`,
-        duration: 20,
-        ease: Power0.easeNone,
-        repeat: -1,
-        modifiers: {
-          y: gsap.utils.unitize((y) => parseFloat(y) % totalHeight), // Modifies y to create an infinite loop
-        },
-      });
-    }, containerRef);
+    const fetchImages = async () => {
+      const data = await client.fetch(`
+        *[_type == "blogPost"]{
+          "src": image.asset->url,
+          "alt": heading,
+          "text": description
+        }
+      `);
+      setImages(data);
+    };
 
-    return () => context.revert();
+    fetchImages();
   }, []);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      const context = gsap.context(() => {
+        tweenRef.current = gsap.to(containerRef.current, {
+          y: `-${totalHeight}vh`,
+          duration: 20,
+          ease: Power0.easeNone,
+          repeat: -1,
+          modifiers: {
+            y: gsap.utils.unitize((y) => parseFloat(y) % totalHeight),
+          },
+        });
+      }, containerRef);
+
+      return () => context.revert();
+    }
+  }, [images]);
 
   const handleMouseEnterImage = (index: number) => {
     if (tweenRef.current) {
