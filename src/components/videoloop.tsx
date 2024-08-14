@@ -7,7 +7,8 @@ import { client } from "@/sanity/lib/client";
 interface ImageData {
   src: string;
   alt: string;
-  text: string;
+  heading: string;
+  description: string;
 }
 
 const imageHeight = 60; // Adjust based on your image height as a percentage of viewport height
@@ -28,7 +29,8 @@ const VideoLoop: React.FC = () => {
         *[_type == "blogPost"]{
           "src": image.asset->url,
           "alt": heading,
-          "text": description
+          "heading": heading,
+          "description": description
         }
       `);
       setImages(data);
@@ -151,7 +153,10 @@ const VideoLoop: React.FC = () => {
       {popupVisible !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
           <div className="relative bg-white rounded-lg p-4 w-[80vw] h-[40vh] md:w-[50vw] md:h-[50vh] shadow-lg">
-            <p className="mb-4">{images[popupVisible].text}</p>
+            <h2 className="text-xl font-bold mb-2">
+              {images[popupVisible].heading}
+            </h2>
+            <p className="mb-4">{images[popupVisible].description}</p>
             <button
               className="absolute top-2 right-2 rounded-full bg-black text-white py-2 px-4"
               onClick={handleClosePopup}
