@@ -15,6 +15,12 @@ body {
 }
 
 .grid-container {
-  padding: 0 40px; /* Increased padding for desktop */
-  box-sizing: border-box;
+  padding: 0 15px;
+}
+
+/* Media query for desktop screens */
+@media (min-width: 1024px) {
+  .grid-container {
+    padding: 0 50px;
+  }
 }
