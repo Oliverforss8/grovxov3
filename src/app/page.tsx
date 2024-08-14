@@ -22,7 +22,11 @@ export default function Home() {
           <p className="text-white font-bold text-[16px] md:text-[20px] text-left">
             Cultivating growth through community,
             <br /> mindset, and processes to enable driven <br /> individuals to
-            reach their potential.
+            reach their potential. <br /> <br />
+            <span>
+              Designed by
+              <a href="https://www.forssdigital.com/"> Forss Digital</a>
+            </span>
           </p>
         </div>
       </div>
