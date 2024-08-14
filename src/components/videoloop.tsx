@@ -11,16 +11,13 @@ interface ImageData {
   description: string;
 }
 
-const imageHeight = 60; // Adjust based on your image height as a percentage of viewport height
-const marginBetweenImages = 2; // Adjust based on desired margin as a percentage
-const totalHeight = (imageHeight + marginBetweenImages) * 3; // Update this based on the fetched data length
+const marginBetweenImages = 2; // Margin between images in vh
 
 const VideoLoop: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const [images, setImages] = useState<ImageData[]>([]);
-  const [hoveredImage, setHoveredImage] = useState<number | null>(null);
   const [popupVisible, setPopupVisible] = useState<number | null>(null);
 
   useEffect(() => {
@@ -33,7 +30,7 @@ const VideoLoop: React.FC = () => {
           "description": description
         }
       `);
-      setImages(data);
+      setImages([...data, ...data]); // Duplicate the images to ensure a smooth loop
     };
 
     fetchImages();
@@ -41,14 +38,19 @@ const VideoLoop: React.FC = () => {
 
   useEffect(() => {
     if (images.length > 0) {
+      const totalHeight = containerRef.current?.scrollHeight || 0;
+      if (tweenRef.current) {
+        tweenRef.current.kill();
+      }
+
       const context = gsap.context(() => {
         tweenRef.current = gsap.to(containerRef.current, {
-          y: `-${totalHeight}vh`,
+          y: `-${totalHeight / 2}px`, // Scroll halfway through the doubled list
           duration: 20,
           ease: Power0.easeNone,
-          repeat: -1,
-          modifiers: {
-            y: gsap.utils.unitize((y) => parseFloat(y) % totalHeight),
+          repeat: -1, // Infinite loop
+          onRepeat: () => {
+            gsap.set(containerRef.current, { y: 0 }); // Reset to start for seamless loop
           },
         });
       }, containerRef);
@@ -61,7 +63,6 @@ const VideoLoop: React.FC = () => {
     if (tweenRef.current) {
       tweenRef.current.pause();
     }
-    setHoveredImage(index);
     gsap.to(cursorRef.current, { opacity: 1, duration: 0.1 });
   };
 
@@ -69,23 +70,14 @@ const VideoLoop: React.FC = () => {
     if (tweenRef.current) {
       tweenRef.current.play();
     }
-    setHoveredImage(null);
-    gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (cursorRef.current && hoveredImage !== null && popupVisible === null) {
-      gsap.set(cursorRef.current, { x: e.clientX, y: e.clientY });
-    }
-  };
-
-  const handleMouseLeaveContainer = () => {
     gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
   };
 
   const handleImageClick = (index: number | null) => {
     setPopupVisible(index);
-    gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+    if (cursorRef.current) {
+      gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+    }
   };
 
   const handleClosePopup = (
@@ -93,25 +85,17 @@ const VideoLoop: React.FC = () => {
   ) => {
     e.stopPropagation();
     setPopupVisible(null);
-    setHoveredImage(null);
   };
 
   return (
-    <div
-      className="flex justify-center items-center h-screen"
-      onMouseMove={handleMouseMove}
-    >
-      <div
-        className="relative overflow-hidden h-[85vh] w-full text-white"
-        onMouseLeave={handleMouseLeaveContainer}
-      >
+    <div className="flex justify-center items-center h-screen">
+      <div className="relative overflow-hidden h-[85vh] w-full text-white">
         <div ref={containerRef} className="absolute top-0 w-full">
           {images.map((image, index) => (
             <div
               key={index}
               className="relative w-full group"
               style={{
-                height: `${imageHeight}vh`,
                 marginBottom: `${marginBetweenImages}vh`,
                 cursor: popupVisible === index ? "default" : "pointer",
               }}
@@ -122,28 +106,9 @@ const VideoLoop: React.FC = () => {
               <Image
                 src={image.src}
                 alt={image.alt}
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-          ))}
-          {images.map((image, index) => (
-            <div
-              key={`clone-${index}`}
-              className="relative w-full group"
-              style={{
-                height: `${imageHeight}vh`,
-                marginBottom: `${marginBetweenImages}vh`,
-                cursor: popupVisible === index ? "default" : "pointer",
-              }}
-              onMouseEnter={() => handleMouseEnterImage(index)}
-              onMouseLeave={handleMouseLeaveImage}
-              onClick={() => handleImageClick(index)}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                layout="fill"
+                layout="responsive"
+                width={100} // 100% width
+                height={100} // maintain aspect ratio
                 objectFit="cover"
               />
             </div>
