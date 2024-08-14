@@ -27,7 +27,10 @@ const Header = () => {
       <div className="w-full flex flex-row justify-between">
         <div className="flex flex-row align-middles items-center gap-4">
           <h3 className="text-[20px] font-bold">Take action</h3>
-          <button className="border-[3px] font-bold text-[20px] border-[#FFD626] rounded-xl px-3 ">
+          <button
+            className="border-[3px] font-bold text-[20px] border-[#FFD626] rounded-xl px-3"
+            onClick={() => (window.location.href = "mailto:robin@grovxo.com")}
+          >
             CONTACT
           </button>
         </div>
