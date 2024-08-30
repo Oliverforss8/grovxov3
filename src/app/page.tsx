@@ -17,6 +17,11 @@ export default function Home() {
               height={1000}
               className=" mx-auto"
             />
+            <p className="text-white py-4 text-[12pxs]">
+              - .... . / -.-. --- -.. . / - --- / ... ..- -.-. -.-. . ... ... /
+              .--. .- ... ... .. --- -. / - --- --. . - .... . .-. -. . ... ...
+              / --. .-. .. –
+            </p>
           </Link>
         </div>
         <div className="md:hidden w-full h-full py-">
