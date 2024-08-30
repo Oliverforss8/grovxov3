@@ -17,10 +17,9 @@ export default function Home() {
               height={1000}
               className=" mx-auto"
             />
-            <p className="text-white py-4 text-[12pxs]">
-              - .... . / -.-. --- -.. . / - --- / ... ..- -.-. -.-. . ... ... /
-              .--. .- ... ... .. --- -. / - --- --. . - .... . .-. -. . ... ...
-              / --. .-. .. –
+            <p className=" py-4 text-[12px] text-[#FFD626]">
+              -…— .—-… …—— <br />
+              ..—- —-… —
             </p>
           </Link>
         </div>
@@ -29,9 +28,9 @@ export default function Home() {
         </div>
         <div className="text-center mb-4">
           <p className="text-white font-semibold text-[16px] md:text-[20px] text-left">
-            Cultivating growth through community,
-            <br /> mindset, and processes to enable driven <br /> individuals to
-            reach their potential. <br /> <br />
+            We boost and accelerate early-stage entrepreneurs through <br />
+            value-creating activities and inspiring people. <br />
+            All to clarify their goals and realize their dreams! <br />
             {/* <span className="font-normal">
               Designed by
               <a href="https://www.forssdigital.com/"> Forss Digital</a>
