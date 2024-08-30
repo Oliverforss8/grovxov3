@@ -3,28 +3,40 @@ import imageUrlBuilder from "@sanity/image-url";
 
 const builder = imageUrlBuilder(client);
 
-function urlFor(source: string) {
-  return builder.image(source).url();
+function urlFor(source: any) {
+  return source ? builder.image(source).url() : ""; // Handles images
 }
 
-export interface ImageData {
+function fileUrl(source: any) {
+  return source ? source.url : ""; // Handles videos
+}
+
+export interface MediaData {
   src: string;
   heading: string;
   description: string;
+  type: "image" | "video"; // Field to indicate media type
 }
 
-export async function fetchImages(): Promise<ImageData[]> {
-  const images = await client.fetch(`
+export async function fetchMedia(): Promise<MediaData[]> {
+  const mediaItems = await client.fetch(`
     *[_type == "blogPost"]{
-      "src": image.asset->_ref,
+      media {
+        type,
+        "src": src.asset->url // Directly fetch the URL for video files
+      },
       heading,
       description
     }
   `);
 
-  return images.map((image: any) => ({
-    src: urlFor(image.src),
-    heading: image.heading,
-    description: image.description,
+  console.log("Fetched media items:", mediaItems); // Debugging log
+
+  // Map over the fetched mediaItems
+  return mediaItems.map((item: any) => ({
+    src: item.media.src, // Use the directly fetched URL
+    heading: item.heading,
+    description: item.description,
+    type: item.media.type,
   }));
 }
