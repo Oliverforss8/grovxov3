@@ -60,7 +60,7 @@ const Header = () => {
           <h3 className="text-[16px] md:text-[20px] font-bold">
             Take action &gt;
           </h3>
-          <div onClick={handleOpenForm} className="z-[99999]">
+          <div onClick={handleOpenForm} className="z-[99]">
             <button className="border-[3px] font-bold text-[16px] md:text-[20px] border-[#FFD626] rounded-xl px-3">
               <p>Contact</p>
             </button>
@@ -73,17 +73,20 @@ const Header = () => {
 
       {/* Fullscreen Form Overlay */}
       {isFormVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 w-[90vw] md:w-[60vw] lg:w-[40vw] relative">
+        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center z-[999]">
+          <div className="bg-white rounded-xl p-6 w-[90vw] md:w-[60vw] lg:w-[40vw] relative max-h-[80vh] overflow-y-auto">
             {/* Enhanced Close Button */}
             <button
-              className="absolute top-4 right-4 bg-[#FFD626] text-black rounded-full w-10 h-10 flex items-center justify-center text-xl hover:bg-yellow-500 shadow-md transition-all duration-200 ease-in-out z-[9999999]"
+              className="absolute top-4 right-4 bg-[#FFD626] text-black rounded-full w-10 h-10 flex items-center justify-center text-xl hover:bg-yellow-500 shadow-md transition-all duration-200 ease-in-out z-[99999]"
               onClick={handleCloseForm}
             >
               &times;
             </button>
-            {/* Paperform Embed */}
-            <div data-paperform-id="giosjmtk"></div>
+            {/* Scrollable Content Container */}
+            <div className="overflow-y-auto max-h-[70vh]">
+              {/* Paperform Embed */}
+              <div data-paperform-id="giosjmtk"></div>
+            </div>
           </div>
         </div>
       )}
