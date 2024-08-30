@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { gsap, Power0 } from "gsap";
-import { fetchMedia, MediaData } from "../components/fetchData";
+import { fetchMedia, MediaData } from "../components/fetchData"; // Adjusted import path
 
 const marginBetweenImages = 2; // Margin between images in vh
 
@@ -37,7 +37,7 @@ const VideoLoop: React.FC = () => {
           repeat: -1, // Infinite loop
           onRepeat: () => {
             gsap.set(containerRef.current, { y: 0 }); // Reset to start for seamless loop
-          },
+          }
         });
       }, containerRef);
 
@@ -45,7 +45,6 @@ const VideoLoop: React.FC = () => {
     }
   }, [media]);
 
-  // Update cursor position based on mouse movement
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (cursorRef.current) {
@@ -53,7 +52,7 @@ const VideoLoop: React.FC = () => {
           x: e.clientX,
           y: e.clientY,
           duration: 0.1,
-          ease: "power2.out",
+          ease: "power2.out"
         });
       }
     };
@@ -127,7 +126,8 @@ const VideoLoop: React.FC = () => {
                   src={mediaItem.src}
                   autoPlay
                   loop
-                  muted
+                  muted // Ensure the video is muted to prevent fullscreen on mobile
+                  playsInline // Prevent automatic fullscreen on mobile devices
                   className="w-full h-auto"
                 >
                   Your browser does not support the video tag.
@@ -140,24 +140,40 @@ const VideoLoop: React.FC = () => {
         </div>
       </div>
       {popupVisible !== null && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-          <div className="relative bg-white rounded-lg p-4 w-[80vw] h-[40vh] md:w-[50vw] md:h-[50vh] shadow-lg">
-            <h2 className="text-xl font-bold mb-2">
-              {media[popupVisible].heading}
-            </h2>
-            <p className="mb-4">{media[popupVisible].description}</p>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out">
+          <div className="relative bg-white rounded-xl p-6 w-[90vw] md:w-[60vw] lg:w-[40vw] shadow-2xl">
+            {media[popupVisible].type === 'image' ? (
+              <Image
+                src={media[popupVisible].src}
+                alt={media[popupVisible].heading}
+                layout="responsive"
+                width={700}
+                height={400}
+                className="rounded-lg"
+              />
+            ) : (
+              <video
+                src={media[popupVisible].src}
+                controls
+                muted // Keep muted to avoid autoplay issues on mobile
+                playsInline // Prevent automatic fullscreen on mobile devices
+                className="w-full h-auto rounded-lg"
+              />
+            )}
+            <h2 className="text-2xl font-bold mt-4">{media[popupVisible].heading}</h2>
+            <p className="mt-2 text-gray-700">{media[popupVisible].description}</p>
             <button
-              className="absolute top-2 right-2 rounded-full bg-black text-white py-2 px-4"
+              className="absolute top-2 right-2 rounded-full bg-[#FFD626] text-black p-2 hover:bg-yellow-600 transition duration-200"
               onClick={handleClosePopup}
             >
-              Close
+              &times;
             </button>
           </div>
         </div>
       )}
       <div
         ref={cursorRef}
-        className="fixed top-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-black text-white flex items-center justify-center rounded-full pointer-events-none transition-opacity duration-100"
+        className="fixed top-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-[#FFD626] text-black flex items-center justify-center rounded-full pointer-events-none transition-opacity duration-100"
         style={{ transform: "translate(-50%, -50%)", zIndex: 1000, opacity: 0 }}
       >
         View Now

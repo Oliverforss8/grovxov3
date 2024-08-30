@@ -1,20 +1,23 @@
 import VideoLoop from "@/components/videoloop";
 import Image from "next/image";
 import gro from "../../public/grocommunity.png";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="mt-[-30px] h-[90vh] overflow-hidden sc flex flex-col md:flex-row gap-14 items-center grid-container ">
       <div className="h-full md:h-[90vh] w-full flex flex-col justify-between  md:py-0">
         <div className=" md:w-[80%] mt-20">
-          <Image
-            src={gro}
-            alt="Loop 1"
-            layout="responsive"
-            width={1000}
-            height={1000}
-            className=" mx-auto"
-          />
+          <Link href="/">
+            <Image
+              src={gro}
+              alt="Loop 1"
+              layout="responsive"
+              width={1000}
+              height={1000}
+              className=" mx-auto"
+            />
+          </Link>
         </div>
         <div className="md:hidden w-full h-full py-">
           <VideoLoop />
