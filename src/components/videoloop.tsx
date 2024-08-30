@@ -45,18 +45,42 @@ const VideoLoop: React.FC = () => {
     }
   }, [media]);
 
+  // Update cursor position based on mouse movement
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (cursorRef.current) {
+        gsap.to(cursorRef.current, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   const handleMouseEnterMedia = (index: number) => {
     if (tweenRef.current) {
       tweenRef.current.pause();
     }
-    gsap.to(cursorRef.current, { opacity: 1, duration: 0.1 });
+    if (cursorRef.current) {
+      gsap.to(cursorRef.current, { opacity: 1, duration: 0.1 });
+    }
   };
 
   const handleMouseLeaveMedia = () => {
     if (tweenRef.current) {
       tweenRef.current.play();
     }
-    gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+    if (cursorRef.current) {
+      gsap.to(cursorRef.current, { opacity: 0, duration: 0.1 });
+    }
   };
 
   const handleMediaClick = (index: number | null) => {
