@@ -37,7 +37,7 @@ const VideoLoop: React.FC = () => {
           repeat: -1, // Infinite loop
           onRepeat: () => {
             gsap.set(containerRef.current, { y: 0 }); // Reset to start for seamless loop
-          }
+          },
         });
       }, containerRef);
 
@@ -52,7 +52,7 @@ const VideoLoop: React.FC = () => {
           x: e.clientX,
           y: e.clientY,
           duration: 0.1,
-          ease: "power2.out"
+          ease: "power2.out",
         });
       }
     };
@@ -141,8 +141,8 @@ const VideoLoop: React.FC = () => {
       </div>
       {popupVisible !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out">
-          <div className="relative bg-white rounded-xl p-6 w-[90vw] md:w-[60vw] lg:w-[40vw] shadow-2xl">
-            {media[popupVisible].type === 'image' ? (
+          <div className="relative bg-white rounded-xl p-6 w-[90vw] md:w-[60vw] lg:w-[40vw] h-[80vh] max-h-full overflow-y-auto shadow-2xl">
+            {media[popupVisible].type === "image" ? (
               <Image
                 src={media[popupVisible].src}
                 alt={media[popupVisible].heading}
@@ -160,8 +160,12 @@ const VideoLoop: React.FC = () => {
                 className="w-full h-auto rounded-lg"
               />
             )}
-            <h2 className="text-2xl font-bold mt-4">{media[popupVisible].heading}</h2>
-            <p className="mt-2 text-gray-700">{media[popupVisible].description}</p>
+            <h2 className="text-2xl font-bold mt-4">
+              {media[popupVisible].heading}
+            </h2>
+            <p className="mt-2 text-gray-700">
+              {media[popupVisible].description}
+            </p>
             <button
               className="absolute top-2 right-2 rounded-full bg-[#FFD626] text-black p-2 hover:bg-yellow-600 transition duration-200"
               onClick={handleClosePopup}
@@ -171,6 +175,7 @@ const VideoLoop: React.FC = () => {
           </div>
         </div>
       )}
+
       <div
         ref={cursorRef}
         className="fixed top-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-[#FFD626] text-black flex items-center justify-center rounded-full pointer-events-none transition-opacity duration-100"

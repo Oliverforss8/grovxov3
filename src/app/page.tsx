@@ -17,12 +17,9 @@ export default function Home() {
               height={1000}
               className=" mx-auto"
             />
-            <p className=" py-4 text-[12px] text-[#FFD626]">
-              - .... . / -.-. --- <br />
-              -.. . / - --- / ... <br />
-              ..- -.-. -.-. . ... ... <br /> / .--. .- ... ... .. --- -. / - ---{" "}
-              <br />
-              --. . - .... . .-. -. . ... ... <br />/ --. .-. .. –
+            <p className=" py-4 text-[15px] text-[#FFD626] font-bold">
+              -…— .—-… …—— <br />
+              ..—- —-… —
             </p>
           </Link>
         </div>
