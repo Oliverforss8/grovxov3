@@ -18,8 +18,9 @@ export default function Home() {
               className=" mx-auto"
             />
             <p className=" py-4 text-[15px] text-[#FFD626] font-bold">
-              -…— .—-… …—— <br />
-              ..—- —-… —
+              - .... . / -.-. --- -.. . / - --- / ... ..- -.-. -.-. . ... ... /
+              .--. .- ... ... .. <br />
+              --- -. / - --- --. . - .... . .-. -. . ... ... / --. .-. .. –
             </p>
           </Link>
         </div>
