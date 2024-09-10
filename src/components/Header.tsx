@@ -62,7 +62,7 @@ const Header = () => {
           </h3>
           <div onClick={handleOpenForm} className="z-[99]">
             <button className="border-[3px] font-bold text-[16px] md:text-[20px] border-[#FFD626] rounded-xl px-3">
-              <p>Contact</p>
+              <p>Connect</p>
             </button>
           </div>
         </div>
